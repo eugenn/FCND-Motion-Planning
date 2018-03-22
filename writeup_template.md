@@ -24,7 +24,6 @@
 
 You're reading it! Below I describe how I addressed each rubric point and where in my code each point is handled.
 
-
 ![Top Down View](./misc/high_up.png)
 
 ### Explain the Starter Code
@@ -44,7 +43,6 @@ First of all I read from the file `colliders.csv` the start point (latitude, lon
 Here as long as you successfully determine your local position relative to global home you'll be all set. Explain briefly how you accomplished this in your code.
 
 
-
 #### 3. Set grid start position from local position (see line #147)
 Here need to calculate two values: north_offset and east_offset. After that subtract from the local_position. The file `colliders.csv` contains data about obstacle sizes and the center coords.
 Coords values are positive and negative because there are calculated against the grid center, so why need to calculate offset in **north** and **east**.  
@@ -59,14 +57,18 @@ how was explained [here](http://theory.stanford.edu/~amitp/GameProgramming/Heuri
 #### 6. Cull waypoints 
 That was most challenged part of the project. The A* algorithm returns a list of waypoints which drone will visit and stop in each waypoint. Obviously this is not effective approach and need somehow 
 optimise that. 
+
 ![](./misc/a_star.png)
 
 First of all I tried to use the colliniarity feature from the udacity lesson. 
 ![](./misc/collinear.png)
+
 But result is not good for me because the path looks not optimal and effective.
 
 So I decided to realize the Bresenham algorithm.
+
 ![](./misc/bres.png)) 
+
 So now it looks much more better!
 
 
