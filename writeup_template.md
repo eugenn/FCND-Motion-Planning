@@ -57,20 +57,13 @@ how was explained [here](http://theory.stanford.edu/~amitp/GameProgramming/Heuri
 #### 6. Cull waypoints 
 That was most challenged part of the project. The A* algorithm returns a list of waypoints which drone will visit and stop in each waypoint. Obviously this is not effective approach and need somehow 
 optimise that. 
-
 ![](./misc/a_star.png)
-
 First of all I tried to use the colliniarity feature from the udacity lesson. 
 ![](./misc/collinear.png)
-
 But result is not good for me because the path looks not optimal and effective.
-
 So I decided to realize the Bresenham algorithm.
-
 ![](./misc/bres.png)) 
-
 So now it looks much more better!
-
 
 ### Execute the flight
 #### 1. Does it work?
