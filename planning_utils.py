@@ -56,10 +56,10 @@ class Action(Enum):
     UP = (-1, 0, 1)
     DOWN = (1, 0, 1)
 
-    UP_LEFT = (-1, -1, 1.42412)
-    UP_RIGHT = (-1, 1, 1.42412)
-    DOWN_LEFT = (1, -1, 1.42412)
-    DOWN_RIGHT = (1, 1, 1.42412)
+    UP_LEFT = (-1, -1, 1)
+    UP_RIGHT = (-1, 1, 1)
+    DOWN_LEFT = (1, -1, 1)
+    DOWN_RIGHT = (1, 1, 1)
 
     @property
     def cost(self):
@@ -155,10 +155,19 @@ def a_star(grid, h, start, goal):
     return path[::-1], path_cost
 
 
-def heuristic(position, goal_position):
+def heuristic2(position, goal_position):
     h = abs(position[0] - goal_position[0]) + abs(position[1] - goal_position[1])
     return h
 
+
+def heuristic(position, goal_position):
+    D = 1
+    D2 = np.sqrt(2)
+
+    dx = np.abs(position[0] - goal_position[0])
+    dy = np.abs(position[1] - goal_position[1])
+
+    return D * (dx + dy) + (D2 - 2 * D) * min(dx, dy)
 
 def point(p):
     return np.array([p[0], p[1], 1.]).reshape(1, -1)

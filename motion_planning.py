@@ -144,9 +144,7 @@ class MotionPlanning(Drone):
         print("North offset = {0}, east offset = {1}".format(north_offset, east_offset))
 
         # Define starting point on the grid (this is just grid center)
-        start = (int(self.local_position[0] - north_offset), int(self.local_position[1] - east_offset))
-
-        grid_start = start
+        grid_start = (int(self.local_position[0] - north_offset), int(self.local_position[1] - east_offset))
 
         # Set goal as some arbitrary position on the grid
         grid_goal = (int(local_goal[0] - north_offset), int(local_goal[1] - east_offset))
