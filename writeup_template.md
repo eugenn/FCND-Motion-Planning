@@ -35,24 +35,20 @@ In the first project the path was hardcoded as a array of local points. Here we 
 ### Implementing Your Path Planning Algorithm
 
 #### 1. Set your global home position
-First of all I read from the file `colliders.csv` the start point (latitude, longitude) and set the home position (see line# 135)
-
+First of all I read from the file `colliders.csv` the start point (latitude, longitude) and set the home position (see line #130)
 
 #### 2. Set your current local position
+The current local position can be retrieved using function `global_to_local`. See line #138
 
-Here as long as you successfully determine your local position relative to global home you'll be all set. Explain briefly how you accomplished this in your code.
-
-
-#### 3. Set grid start position from local position (see line #147)
+#### 3. Set grid start position from local position (see line #150)
 Here need to calculate two values: north_offset and east_offset. After that subtract from the local_position. The file `colliders.csv` contains data about obstacle sizes and the center coords.
 Coords values are positive and negative because there are calculated against the grid center, so why need to calculate offset in **north** and **east**.  
 
 #### 4. Set grid goal position from geodetic coords
-The grid goal position can be calculated from (lat, lon) just using the Drone API function `global_to_local`
+The grid goal position is set from the main body and after that converted to local coords using the same approach as in step #2.
 
 #### 5. Modify A* to include diagonal motion (or replace A* altogether)
-I modified the A* implementation and add the diagoanal motions with a cost of sqrt(2). Actually tried three different versions of heuristic functions and decided impalement the Chebyshev distance 
-how was explained [here](http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html#diagonal-distance).
+I modified the A* implementation and add the diagoanal motions with a cost of sqrt(2). Actually tried three different versions of heuristic functions but the original versions actually was good and fast enough.
 
 #### 6. Cull waypoints 
 That was most challenged part of the project. The A* algorithm returns a list of waypoints which drone will visit and stop in each waypoint. Obviously this is not effective approach and need somehow 
@@ -64,6 +60,9 @@ But result is not good for me because the path looks not optimal and effective.
 So I decided to realize the Bresenham algorithm.
 ![](./misc/bres.png)) 
 So now it looks much more better!
+
+Here I decided to call pruning function 3 times because after the first execution it is still possible (in some cases) remove 2-3 waypoints. It will not be costly just because most of all waypoints were removed 
+after the first call.
 
 ### Execute the flight
 #### 1. Does it work?

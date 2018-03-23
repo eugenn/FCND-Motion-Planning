@@ -9,7 +9,7 @@ from udacidrone.connection import MavlinkConnection
 from udacidrone.frame_utils import *
 from udacidrone.messaging import MsgID
 
-from planning_utils import a_star, heuristic, create_grid, bres_prune_path
+from planning_utils import a_star, heuristic, create_grid, bres_prune_path, prune_path
 
 
 class States(Enum):
@@ -134,6 +134,9 @@ class MotionPlanning(Drone):
 
         self.set_home_position(lon0, lat0, 0)
 
+        global_position = [self._longitude, self._latitude, self._altitude]
+        current_local_pos = global_to_local(global_position, self.global_home)
+
         print('global home {0}, position {1}, local position {2}'.format(self.global_home, self.global_position,
                                                                          self.local_position))
         # Read in obstacle map
@@ -144,7 +147,7 @@ class MotionPlanning(Drone):
         print("North offset = {0}, east offset = {1}".format(north_offset, east_offset))
 
         # Define starting point on the grid (this is just grid center)
-        grid_start = (int(self.local_position[0] - north_offset), int(self.local_position[1] - east_offset))
+        grid_start = (int(current_local_pos[0] - north_offset), int(current_local_pos[1] - east_offset))
 
         # Set goal as some arbitrary position on the grid
         grid_goal = (int(local_goal[0] - north_offset), int(local_goal[1] - east_offset))
@@ -154,9 +157,11 @@ class MotionPlanning(Drone):
         print('Local Start and Goal: ', grid_start, grid_goal)
         path, _ = a_star(grid, heuristic, grid_start, grid_goal)
 
-        pruned_path = bres_prune_path(grid, path)
+        pruned_path = path
 
-        print("optimal path len=", len(pruned_path))
+        for _ in range(3):
+            pruned_path = bres_prune_path(grid, pruned_path)
+            print("path len =", len(pruned_path))
 
         # Convert path to waypoints
         waypoints = [[p[0] + north_offset, p[1] + east_offset, TARGET_ALTITUDE, 0] for p in pruned_path]
@@ -189,9 +194,9 @@ if __name__ == "__main__":
 
     # goal_location = [-122.396618, 37.793883, 0]
 
-    goal_location = [-122.399146, 37.797006, 0]
+    # goal_location = [-122.399146, 37.797006, 0]
 
-    # goal_location = [-122.399174, 37.796995, 0]
+    goal_location = [-122.399174, 37.796995, 0]
 
     drone = MotionPlanning(conn, goal_location)
 
